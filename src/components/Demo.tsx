@@ -1,0 +1,220 @@
+"use client";
+
+import { useEffect, useCallback, useState } from "react";
+import sdk, {
+  type Context,
+} from "@farcaster/frame-sdk";
+import {
+  useAccount,
+  useSendTransaction,
+  useWaitForTransactionReceipt,
+  useConnect,
+} from "wagmi";
+import { encodeFunctionData } from 'viem';
+import { abi } from '../contracts/abi';
+import { FarcasterEmbed } from "react-farcaster-embed/dist/client";
+import "react-farcaster-embed/dist/styles.css";
+
+
+import { config } from "~/components/providers/WagmiProvider";
+import { truncateAddress } from "~/lib/truncateAddress";
+import { BaseError, UserRejectedRequestError } from "viem";
+
+export default function Demo(
+) {
+  const [isSDKLoaded, setIsSDKLoaded] = useState(false);
+  const [context, setContext] = useState<Context.FrameContext>();
+  const [txHash, setTxHash] = useState<string | null>(null);
+
+
+  const { isConnected } = useAccount();
+
+  const {
+    sendTransaction,
+    error: sendTxError,
+    isError: isSendTxError,
+    isPending: isSendTxPending,
+  } = useSendTransaction();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: txHash as `0x${string}`,
+    });
+  const { connect } = useConnect();
+
+  useEffect(() => {
+    const load = async () => {
+      const context = await sdk.context;
+      setContext(context);
+
+      sdk.actions.ready({});
+    };
+    if (sdk && !isSDKLoaded) {
+      setIsSDKLoaded(true);
+      load();
+      return () => {
+        sdk.removeAllListeners();
+      };
+    }
+  }, [isSDKLoaded]);
+  interface ApiResponse {
+    hash: string;
+  }
+  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+
+  const fetchHash = useCallback(async (fid: string) => {
+    try {
+      const Response = await fetch(`/api/hash?fid=${fid}`);
+      if (!Response.ok) {
+        throw new Error(`Fid HTTP error! Status: ${Response.status}`);
+      }
+      const ResponseData = await Response.json();{
+        setApiData({
+          hash: ResponseData.hash,
+
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching points data", err);
+    }
+
+}, []);
+useEffect(() => {
+  if (context?.user.fid) {
+    fetchHash(String(context.user.fid));
+  } 
+}, [context?.user.fid]);
+
+      return (
+        <div style={{ 
+          paddingTop: context?.client.safeAreaInsets?.top ?? 0, 
+          paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
+          paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
+          paddingRight: context?.client.safeAreaInsets?.right ?? 0 ,
+        }}>
+<div className="bg-[#15202B] min-h-screen flex items-center justify-center px-4">
+  <div className="bg-[#192734] text-white rounded-2xl shadow-lg max-w-xl w-full border border-[#2F3336]">
+    <FarcasterEmbed username={context?.user.username} hash={apiData?.hash} />
+  </div>
+  <Mint/>
+</div>
+</div>
+      );
+    
+
+
+    
+      function Mint(){
+
+        const [isClicked, setIsClicked] = useState(false);
+      
+      
+        const CONTRACT_ADDRESS = "0x61c1066897D0C1A669D908B0cD4F4698e1783425";
+        const handleMint = () => {
+          setIsClicked(true);
+          setTimeout(() => {
+            if (isConnected) {
+              sendTx(); // Call sendTx when isConnected is true
+            } else {
+              connect({ connector: config.connectors[0] }); // Otherwise, call connect
+            }
+          }, 500);
+          
+         
+          setTimeout(() => setIsClicked(false), 500); // Reset after animation
+        
+        };
+        const sendTx = useCallback(() => {
+          const data = encodeFunctionData({
+            abi,
+            functionName: "mintNFT",
+            args: [], 
+          });
+          sendTransaction(
+            {
+      
+              to: CONTRACT_ADDRESS,
+              data,
+              value: BigInt("100000000000") // Mint fee
+      
+            },
+            {
+              onSuccess: (hash) => {
+                setTxHash(hash);
+      
+              },
+            }
+          );
+        }, [sendTransaction]);
+        return (
+          <div className="flex flex-col">
+              <button
+            onClick={handleMint}
+            disabled={isSendTxPending}
+      
+            className="text-white text-center py-3 rounded-xl font-semibold text-lg shadow-lg relative overflow-hidden transform transition-all duration-200 hover:scale-110 active:scale-95 flex items-center justify-center gap-2"
+            style={{
+              background: "linear-gradient(90deg, #8B5CF6, #7C3AED, #A78BFA, #8B5CF6)",
+              backgroundSize: "300% 100%",
+              animation: "gradientAnimation 3s infinite ease-in-out"
+            }}
+          >     
+            <div className={`absolute inset-0 bg-[#38BDF8] transition-all duration-500 ${isClicked ? 'scale-x-100' : 'scale-x-0'}`} style={{ transformOrigin: "center" }}></div>
+            <style>{`
+              @keyframes gradientAnimation {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+              }
+            `}</style>
+             {isConnected ? <MintButton/> : "Connect Wallet"}
+          </button>
+          <div className="text-center">
+          {isSendTxError && renderError(sendTxError)}
+          {txHash && (
+                        <div className="mt-2 text-xs">
+                          <div>Hash: {truncateAddress(txHash)}</div>
+                          <div>
+                            Status:{" "}
+                            {isConfirming
+                              ? "Confirming..."
+                              : isConfirmed
+                              ? "Confirmed!"
+                              : "Pending"}
+                          </div>
+                        </div>
+                      )}
+                      </div>
+          </div>
+        
+        )
+      }
+       function MintButton(){
+        return(
+          <div className="flex flex-row gap-2 px-5">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 relative z-10"> 
+          <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+        </svg>
+            <span className="relative z-10">Mint your first cast/repy</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 relative z-10"> 
+              <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+            </svg> </div>
+        )
+       }
+}
+
+const renderError = (error: Error | null) => {
+  if (!error) return null;
+  if (error instanceof BaseError) {
+    const isUserRejection =
+    error instanceof UserRejectedRequestError ||
+    (error.cause && error.cause instanceof UserRejectedRequestError);
+  
+
+    if (isUserRejection) {
+      return <div className="text-red-500 text-xs mt-1">Rejected by user.</div>;
+    }
+  }
+
+  return <div className="text-red-500 text-xs mt-1">{error.message}</div>;
+};
