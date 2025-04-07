@@ -118,9 +118,10 @@ className="w-28 h-28 shadow-lg"
           paddingRight: context?.client.safeAreaInsets?.right ?? 0 ,
         }}>
 <div className="bg-[#15202B] min-h-screen flex items-center justify-center px-4">
+  {apiData?.hash && context?.user.username &&
   <div className="bg-[#192734] text-white rounded-2xl shadow-lg max-w-xl w-full border border-[#2F3336]">
     <FarcasterEmbed username={context?.user.username} hash={apiData?.hash} />
-  </div>
+  </div>}
   <Mint/>
 </div>
 </div>
