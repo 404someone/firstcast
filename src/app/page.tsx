@@ -19,7 +19,7 @@ export async function generateMetadata({
   const frame = {
     version: "next",
     imageUrl: hash 
-    ? `${appUrl}/cover`
+    ? `${appUrl}/cover.png`
     : `${appUrl}/og?hash=${hash}`,
         button: {
           title:"View your first cast/reply",
@@ -28,7 +28,7 @@ export async function generateMetadata({
       name: "first cast/reply",
       url: `${appUrl}`,
       splashImageUrl: `${appUrl}/icon.png`,
-      splashBackgroundColor: "#00c9ff",
+      splashBackgroundColor: "#15202B",
       },
     },
   };

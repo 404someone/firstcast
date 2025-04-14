@@ -9,13 +9,13 @@ export async function GET() {
     },
     frame: {
       version: "1",
-      name: "LetterBot",
+      name: "first cast/reply",
       iconUrl: `${appUrl}/icon.png`,
       homeUrl: appUrl,
-      imageUrl:  `${appUrl}/nft?text=LetterBot`,  
-      buttonTitle: "LetterBot",
+      // imageUrl:  `${appUrl}/nft?text=LetterBot`,  
+      buttonTitle: "1st cast",
       splashImageUrl: `${appUrl}/icon.png`,
-      splashBackgroundColor: "#00c9ff",
+      splashBackgroundColor: "#15202B",
       webhookUrl: `${appUrl}/api/webhook`,
     },
   };
