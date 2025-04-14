@@ -186,7 +186,8 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
       
               to: CONTRACT_ADDRESS,
               data,
-              value: BigInt("100000000000") // Mint fee
+              value: BigInt("500000000000000") // 0.0005 ether in wei
+
       
             },
             {
