@@ -7,25 +7,25 @@ export const revalidate = 300;
 
 interface Props {
   searchParams: Promise<{
-    text: string;
+    hash: string;
   }>;
 }
 
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
-  const { text} = await searchParams;
+  const { hash} = await searchParams;
   
   const frame = {
     version: "next",
-    imageUrl: text 
-    ? `${appUrl}/og?text=${text}`
-    : `${appUrl}/og?text=LetterBot`,
+    imageUrl: hash 
+    ? `${appUrl}/cover`
+    : `${appUrl}/og?hash=${hash}`,
         button: {
-          title: text?`Mint ${text}`: "Mint LetterBot",
+          title:"View your first cast/reply",
     action: {
       type: "launch_frame",
-      name: "letterBot",
+      name: "first cast/reply",
       url: `${appUrl}`,
       splashImageUrl: `${appUrl}/icon.png`,
       splashBackgroundColor: "#00c9ff",
@@ -34,10 +34,10 @@ export async function generateMetadata({
   };
 
   return {
-    title: "LetterBot",
+    title: "first cast/reply",
     openGraph: {
-      title: "LetterBot by cashlessman.eth",
-      description: "LetterBot by cashlessman.eth",
+      title: "first cast/reply by cashlessman.eth",
+      description: "first cast/reply by cashlessman.eth",
     },
     other: {
       "fc:frame": JSON.stringify(frame),

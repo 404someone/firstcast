@@ -97,7 +97,7 @@ const cast = async (): Promise<string | undefined> => {
   try {
     const result = await sdk.actions.composeCast({ 
       text: "This is my first cast/reply.\ncheck yours with this mini app by @cashlessman.eth",
-      embeds: [`https://degen-v2.vercel.app?hash=${apiData?.hash}`],
+      embeds: [`https://firstcast.vercel.app?hash=${apiData?.hash}`],
     });
 
     return result.cast?.hash;
