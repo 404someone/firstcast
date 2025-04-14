@@ -8,19 +8,15 @@ export async function GET(req: Request) {
 
   return new ImageResponse(
     (
-<div tw="flex flex-col w-full h-full bg-[#8a63d2] text-white font-sans border-8 border-gray-300 p-6 justify-center rounded-xl items-center">
-  
-<div  tw="text-9xl font-extrabold">{text}</div>
-<div tw="absolute bottom-10 right-12 rounded-lg border-2 border-white p-2 font-bold">Bot By cashlessman.eth</div>
+<div tw="flex w-[600px] h-[400px] justify-center items-center bg-[#b4a3d4]">
   <img
-    src='https://i.imgur.com/I2rEbPF.png'
+    src="https://client.warpcast.com/v2/cast-image?castHash=0xda9e81d4cb81b774abc8f131b115cc37ac327671"
     alt="Overlay"
-    tw="absolute top-10 left-10 w-15 h-15 rounded-lg border-4 border-white"
+    tw="h-full object-contain"
   />
-
-
-
 </div>
+
+
     ),
     {
       width: 600,

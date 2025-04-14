@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-    const text = req.nextUrl.searchParams.get("text");
+    const hash = req.nextUrl.searchParams.get("hash");
+    const fid = req.nextUrl.searchParams.get("fid");
 
-    if (!text) {
-        return NextResponse.json({ error: "Missing token ID" }, { status: 400 });
+
+    if (!hash) {
+        return NextResponse.json({ error: "Missing hash" }, { status: 400 });
     }
 
     return NextResponse.json({
-        name: `letters #${text} `,
-        description: "An NFT by LetterBot",
-        image: `https://letters-bot.vercel.app/nft?text=${text}`,
-        attributes: [{ trait_type: "letters", value: text }
+        name: `first cast/reply of Fid:${fid} `,
+        description: "An NFT of first cast/reply on farcaster",
+        image: `https://client.warpcast.com/v2/cast-image?castHash=${hash}`,
+        attributes: [{ trait_type: "fid", value: fid }
         ],
     });
 }
