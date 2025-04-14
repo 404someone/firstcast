@@ -129,9 +129,11 @@ className="w-28 h-28 shadow-lg"
           paddingBottom: context?.client.safeAreaInsets?.bottom ?? 0,
           paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
           paddingRight: context?.client.safeAreaInsets?.right ?? 0 ,
-        }}>
+        }}
+        className="flex flex-col bg-[#15202B] min-h-screen flex">
+ {apiData?.hash && context?.user.username &&
 <div className="flex flex-col bg-[#15202B] min-h-screen flex items-center justify-center px-4">
-  {apiData?.hash && context?.user.username &&
+ 
   <div className="bg-[#192734] text-white rounded-2xl shadow-lg max-w-xl w-full border border-[#2F3336]">
 <div
 onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${apiData?.hash}`)}
@@ -139,7 +141,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
 >
   <FarcasterEmbed username={context?.user.username} hash={apiData?.hash} />
 </div>
-  </div>}
+  </div>
   <Mint/>
   <div className="fixed bottom-10 right-10 w-12 aspect-square rounded-full border-2 border-white z-50 flex items-center justify-center text-white"
   onClick={cast}>
@@ -148,7 +150,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
   </svg>
 </div>
 
-</div>
+</div>}
 </div>
       );
     
@@ -160,7 +162,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
         const [isClicked, setIsClicked] = useState(false);
       
       
-        const CONTRACT_ADDRESS = "0x56fAfedb67B208130E567E818bb6075995b2975D";
+        const CONTRACT_ADDRESS = "0x3404Fe61116f58b2D9d17AE6d2Da0e5E454BE359";
         const handleMint = () => {
           setIsClicked(true);
           setTimeout(() => {
@@ -186,8 +188,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
       
               to: CONTRACT_ADDRESS,
               data,
-              value: BigInt("1000000000000")
-
+              value: BigInt("300000000000000")
       
             },
             {

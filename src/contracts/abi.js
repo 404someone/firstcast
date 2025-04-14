@@ -319,6 +319,19 @@ export const abi =[
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "newFee",
+				"type": "uint256"
+			}
+		],
+		"name": "updateMintFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "owner",
 				"type": "address"
@@ -393,7 +406,7 @@ export const abi =[
 	},
 	{
 		"inputs": [],
-		"name": "MINT_FEE",
+		"name": "mintFee",
 		"outputs": [
 			{
 				"internalType": "uint256",
