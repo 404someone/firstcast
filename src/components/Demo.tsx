@@ -14,7 +14,6 @@ import { encodeFunctionData } from 'viem';
 import { abi } from '../contracts/abi';
 import { FarcasterEmbed } from "react-farcaster-embed/dist/client";
 import "react-farcaster-embed/dist/styles.css";
-import axios from "axios";
 
 
 import { config } from "~/components/providers/WagmiProvider";
@@ -26,8 +25,6 @@ export default function Demo(
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<Context.FrameContext>();
   const [txHash, setTxHash] = useState<string | null>(null);
-  const [refid, setRefid ] = useState(undefined);
-
 
   const { isConnected } = useAccount();
 
@@ -87,11 +84,6 @@ useEffect(() => {
   } 
 }, [context?.user.fid]);
 
-useEffect(() => {
-  if (refid) {
-    fetchHash(String(refid));
-  } 
-}, [refid]);
 
 const cast = async (): Promise<string | undefined> => {
   try {
@@ -139,7 +131,6 @@ className="w-28 h-28 shadow-lg"
           paddingRight: context?.client.safeAreaInsets?.right ?? 0 ,
         }}>
 <div className="flex flex-col bg-[#15202B] min-h-screen flex items-center justify-center px-4">
-<Search/>
   {apiData?.hash && context?.user.username &&
   <div className="bg-[#192734] text-white rounded-2xl shadow-lg max-w-xl w-full border border-[#2F3336]">
 <div
@@ -162,7 +153,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
         const [isClicked, setIsClicked] = useState(false);
       
       
-        const CONTRACT_ADDRESS = "0x61c1066897D0C1A669D908B0cD4F4698e1783425";
+        const CONTRACT_ADDRESS = "0x70C788E8939B75a6f4AD458842ef1773478bcE0c";
         const handleMint = () => {
           setIsClicked(true);
           setTimeout(() => {
@@ -181,7 +172,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
           const data = encodeFunctionData({
             abi,
             functionName: "mintNFT",
-            args: [], 
+            args: [context?.user.fid, apiData?.hash], 
           });
           sendTransaction(
             {
@@ -254,71 +245,6 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
             </svg> </div>
         )
        }
-       function Search (){
-        const [searchValue, setSearchValue] = useState("");
-    
-        const fetchfid= useCallback(async (searchValue: string) => {
-    try{
-      const username= searchValue.includes("@") ? searchValue.replace("@", "") : searchValue;
-    
-      const pinataUrl= `https://hub.pinata.cloud/v1/userNameProofByName?name=${username}`
-      const pinataResponse = await axios.get(pinataUrl);
-      const pinataFid = pinataResponse.data.fid;
-      // alert(pinataFid)
-      setRefid(pinataFid)
-    
-    }catch{
-      alert("please enter a valid username")
-      // console.error('Error fetching data:', error);
-    } },[searchValue])
-        return (
-<div className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-2 bg-[#1E2732] backdrop-blur-sm border-b border-gray-200">
-<div className="flex items-center gap-2">
-    <input
-      className="w-[170px] p-2 bg-[#525760] text-base text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-lime-500"
-      type="text"
-      placeholder="search for username"
-      value={searchValue}
-      onChange={(e) => setSearchValue(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          fetchfid(searchValue)
-        }
-      }}
-    />
-    
-      <div className="bg-[#8B5CF6] p-2 rounded-lg"
-          onClick={() => fetchfid(searchValue)}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="size-6 text-white cursor-pointer"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg>
-      </div>
-    </div>
-    
-      <div
-      className="bg-[#8B5CF6] p-2 items-center justify-center text-center cursor-pointer rounded-lg"
-      onClick={cast}
-    >
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-      <path fillRule="evenodd" d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z" clipRule="evenodd" />
-    </svg>
-    </div>
-    </div>
-    
-        )
-      }
 
 }
 
