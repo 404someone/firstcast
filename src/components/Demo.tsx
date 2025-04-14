@@ -160,7 +160,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
         const [isClicked, setIsClicked] = useState(false);
       
       
-        const CONTRACT_ADDRESS = "0x70C788E8939B75a6f4AD458842ef1773478bcE0c";
+        const CONTRACT_ADDRESS = "0x56fAfedb67B208130E567E818bb6075995b2975D";
         const handleMint = () => {
           setIsClicked(true);
           setTimeout(() => {
@@ -186,7 +186,7 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
       
               to: CONTRACT_ADDRESS,
               data,
-              value: BigInt("500000000000000") // 0.0005 ether in wei
+              value: BigInt("1000000000000")
 
       
             },
