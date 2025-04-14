@@ -19,8 +19,8 @@ export async function generateMetadata({
   const frame = {
     version: "next",
     imageUrl: hash 
-    ? `${appUrl}/cover.png`
-    : `${appUrl}/og?hash=${hash}`,
+    ? `${appUrl}/og?hash=${hash}`
+    : `${appUrl}/cover.png`,
         button: {
           title:"View your first cast/reply",
     action: {
