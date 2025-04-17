@@ -17,7 +17,7 @@ import "react-farcaster-embed/dist/styles.css";
 
 
 import { config } from "~/components/providers/WagmiProvider";
-import { truncateAddress } from "~/lib/truncateAddress";
+// import { truncateAddress } from "~/lib/truncateAddress";
 import { BaseError, UserRejectedRequestError } from "viem";
 
 export default function Demo(
@@ -224,19 +224,6 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
           </button>
           <div className="text-center">
           {isSendTxError && renderError(sendTxError)}
-          {txHash && (
-                        <div className="mt-2 text-xs">
-                          <div>Hash: {truncateAddress(txHash)}</div>
-                          <div>
-                            Status:{" "}
-                            {isConfirming
-                              ? "Confirming..."
-                              : isConfirmed
-                              ? "Confirmed!"
-                              : "Pending"}
-                          </div>
-                        </div>
-                      )}
                       </div>
           </div>
         
@@ -247,8 +234,11 @@ onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${a
           <div className="flex flex-row gap-2 px-5">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 relative z-10"> 
           <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
-        </svg>
-            <span className="relative z-10">Mint your first cast/reply</span>
+        </svg> <span className="relative z-10">  {isConfirming
+                          ? "Minting..."
+                          : isConfirmed
+                          ? "Minted!"
+                          : "Mint your first cast/reply"}</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 relative z-10"> 
               <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
             </svg> </div>
@@ -266,7 +256,7 @@ const renderError = (error: Error | null) => {
   
 
     if (isUserRejection) {
-      return <div className="text-red-500 text-xs mt-1">Rejected by user.</div>;
+      return <div className="text-red-500 text-xs mt-1">Click again to Mint.</div>;
     }
   }
 
