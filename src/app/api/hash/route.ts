@@ -1,31 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
-
   const fid = req.nextUrl.searchParams.get("fid");
-
-  if (!fid) {
-    console.log("Error: fid parameter is missing");
-    return NextResponse.json(
-      { error: "fid parameter is required" },
-      { status: 400 }
-    );
-  }
-
+  type Msg = {
+    hash: string;
+    data: {
+      castAddBody: {
+        parentCastId: {
+          fid: number;
+          hash: string;
+        } | null;
+      };
+    };
+  };
+  
   try {
-    const firstCastUrl = `https://hub.pinata.cloud/v1/castsByFid?pageSize=1&fid=${fid}`;
-    const firstCastResponse = await axios.get(firstCastUrl);
-    
-console.log(firstCastResponse.data.messages[0].hash)
-    return NextResponse.json({
-      hash:firstCastResponse.data.messages[0].hash
-    });
-  } catch (error) {
-    console.error("Unexpected error:", error);
-    return NextResponse.json(
-      { error: "An unexpected error occurred" },
-      { status: 500 }
+    const res = await fetch(`https://hub.pinata.cloud/v1/castsByFid?pageSize=1&reverse=false&fid=${fid}`); 
+    const data = await res.json();
+
+    if (!data || !Array.isArray(data.messages)) {
+      return NextResponse.json({ error: 'Invalid response format' }, { status: 500 });
+    }
+
+    const original = data.messages.find(
+      (msg: Msg) => msg?.data?.castAddBody?.parentCastId === null
     );
+
+    if (!original) {
+      return NextResponse.json({ error: 'No original message found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ hash: original.hash });
+  } catch (err) {
+    return NextResponse.json({ error: 'Something went wrong', details: err }, { status: 500 });
   }
 }

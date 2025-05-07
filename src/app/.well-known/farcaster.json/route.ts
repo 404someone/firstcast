@@ -9,7 +9,7 @@ export async function GET() {
     },
     frame: {
       version: "1",
-      name: "first cast/reply",
+      name: "first cast",
       iconUrl: `${appUrl}/icon.png`,
       homeUrl: appUrl,
       // imageUrl:  `${appUrl}/nft?text=LetterBot`,  

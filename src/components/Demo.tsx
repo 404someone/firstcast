@@ -88,7 +88,7 @@ useEffect(() => {
 const cast = async (): Promise<string | undefined> => {
   try {
     const result = await sdk.actions.composeCast({ 
-      text: "This is my first cast/reply.\ncheck yours with this mini app by @cashlessman.eth",
+      text: "This is my first cast.\ncheck yours with this mini app by @cashlessman.eth",
       embeds: [`https://firstcast.vercel.app?hash=${apiData?.hash}`],
     });
 
@@ -136,7 +136,7 @@ className="w-28 h-28 shadow-lg"
  
   <div className="bg-[#192734] text-white rounded-2xl shadow-lg max-w-xl w-full border border-[#2F3336]">
 <div
-onDoubleClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${apiData?.hash}`)}
+onClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${apiData?.hash}`)}
   style={{ cursor: "pointer" }}
 >
   <FarcasterEmbed username={context?.user.username} hash={apiData?.hash} />

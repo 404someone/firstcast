@@ -22,10 +22,10 @@ export async function generateMetadata({
     ? `${appUrl}/og?hash=${hash}`
     : `${appUrl}/cover.png`,
         button: {
-          title:"View your first cast/reply",
+          title:"View your first cast",
     action: {
       type: "launch_frame",
-      name: "first cast/reply",
+      name: "first cast",
       url: `${appUrl}`,
       splashImageUrl: `${appUrl}/icon.png`,
       splashBackgroundColor: "#15202B",
@@ -34,10 +34,10 @@ export async function generateMetadata({
   };
 
   return {
-    title: "first cast/reply",
+    title: "first cast",
     openGraph: {
-      title: "first cast/reply by cashlessman.eth",
-      description: "first cast/reply by cashlessman.eth",
+      title: "first cast by cashlessman.eth",
+      description: "first cast by cashlessman.eth",
     },
     other: {
       "fc:frame": JSON.stringify(frame),
