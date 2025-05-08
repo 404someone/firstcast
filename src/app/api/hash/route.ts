@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   };
   
   try {
-    const res = await fetch(`https://hub.pinata.cloud/v1/castsByFid?pageSize=1&reverse=false&fid=${fid}`); 
+    const res = await fetch(`https://hub.pinata.cloud/v1/castsByFid?pageSize=100&reverse=false&fid=${fid}`); 
     const data = await res.json();
 
     if (!data || !Array.isArray(data.messages)) {

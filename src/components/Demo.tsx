@@ -74,7 +74,7 @@ export default function Demo(
         });
       }
     } catch (err) {
-      console.error("Error fetching points data", err);
+      console.error("Error fetching hash", err);
     }
 
 }, []);
