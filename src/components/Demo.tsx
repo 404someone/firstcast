@@ -110,7 +110,7 @@ if (!context?.user.fid)
       </p>
   
       <div className="flex items-center justify-center p-2 bg-white rounded-lg mt-4">
-      <a href="https://warpcast.com/cashlessman.eth/0xcaf78007" target="_blank" rel="noopener noreferrer" className="shadow-lg shadow-white">
+      <a href="https://warpcast.com/cashlessman.eth/0x084518c4" target="_blank" rel="noopener noreferrer" className="shadow-lg shadow-white">
 <img 
 src="https://warpcast.com/og-logo.png"
 alt="Profile" 
