@@ -59,6 +59,10 @@ export default function Demo(
   interface ApiResponse {
     hash: string;
   }
+   interface StorageResponse {
+    limit: number;
+    used: number;
+  }
   const [apiData, setApiData] = useState<ApiResponse | null>(null);
 
   const fetchHash = useCallback(async (fid: string) => {
@@ -76,20 +80,41 @@ export default function Demo(
     } catch (err) {
       console.error("Error fetching hash", err);
     }
-
 }, []);
+  const [storageData, setStorageData] = useState<StorageResponse | null>(null);
+
+  const fetchStorage = useCallback(async (fid: string) => {
+    try {
+      const Response = await fetch(`/api/storage?fid=${fid}`);
+      if (!Response.ok) {
+        throw new Error(`Fid HTTP error! Status: ${Response.status}`);
+      }
+      const ResponseData = await Response.json();{
+        setStorageData({
+          limit: ResponseData.limit,
+          used:ResponseData.used,
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching hash", err);
+    }
+}, []);
+
 useEffect(() => {
   if (context?.user.fid) {
     fetchHash(String(context.user.fid));
+    fetchStorage(String(context.user.fid));
+
   } 
 }, [context?.user.fid]);
 
+const hashed=apiData?.hash ||""
 
 const cast = async (): Promise<string | undefined> => {
   try {
     const result = await sdk.actions.composeCast({ 
       text: "This is my first cast.\ncheck yours with this mini app by @cashlessman.eth",
-      embeds: [`https://firstcast.vercel.app?hash=${apiData?.hash}`],
+      embeds: [`https://firstcast.vercel.app?hash=${apiData?.hash}`, `https://farcaster.xyz/${context?.user.username}/${(hashed).slice(0, 10)}`],
     });
 
     return result.cast?.hash;
@@ -130,9 +155,9 @@ className="w-28 h-28 shadow-lg"
           paddingLeft: context?.client.safeAreaInsets?.left ?? 0,
           paddingRight: context?.client.safeAreaInsets?.right ?? 0 ,
         }}
-        className="flex flex-col bg-[#15202B] min-h-screen flex">
+        className="flex flex-col bg-[#15202B] min-h-screen">
  {apiData?.hash && context?.user.username &&
-<div className="flex flex-col bg-[#15202B] min-h-screen flex items-center justify-center px-4">
+<div className="flex flex-col bg-[#15202B] min-h-screen items-center justify-center px-4">
  
   <div className="bg-[#192734] text-white rounded-2xl shadow-lg max-w-xl w-full border border-[#2F3336]">
 <div
@@ -142,6 +167,9 @@ onClick={()=>sdk.actions.openUrl(`https://warpcast.com/~/conversations/${apiData
   <FarcasterEmbed username={context?.user.username} hash={apiData?.hash} />
 </div>
   </div>
+  { storageData?.limit === storageData?.used && <div className="text-red-600 text-xs text-center">This might not be your First cast because you are running out of storage</div>
+
+  }
   <Mint/>
   <div className="fixed bottom-10 right-10 w-12 aspect-square rounded-full border-2 border-white z-50 flex items-center justify-center text-white"
   onClick={cast}>

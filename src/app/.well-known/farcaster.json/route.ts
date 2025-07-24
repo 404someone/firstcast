@@ -17,6 +17,8 @@ export async function GET() {
       splashImageUrl: `${appUrl}/icon.png`,
       splashBackgroundColor: "#15202B",
       webhookUrl: `${appUrl}/api/webhook`,
+      castShareUrl: appUrl
+
     },
   };
 
